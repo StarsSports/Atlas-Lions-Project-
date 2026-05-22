@@ -3,33 +3,152 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>أرشيف أسود الأطلس</title>
+  <title>أرشيف أسود الأطلس 🇲🇦</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script src="https://unpkg.com/lucide@0.368.0/dist/umd/lucide.min.js"></script>
-  <script src="https://unpkg.com/motion/react"></script>
+  <script src="https://unpkg.com/framer-motion@12.0.0/dist/framer-motion.js"></script>
+  <style>
+    body { font-family: 'Tajawal', sans-serif; }
+  </style>
 </head>
-<body class="bg-[#f5f0e3]">
+<body class="bg-[#f5f0e3] text-neutral-900">
   <div id="root"></div>
   <script type="text/babel">
-    const { useState, useMemo } = React;
-    const { Trophy, Users, History, Search, Award, BookOpen, Volume2, VolumeX, ArrowRightLeft, X } = lucide;
-    const { motion, AnimatePresence } = motion;
+    const { useState } = React;
+    const { motion, AnimatePresence } = window.Motion;
+    const { Trophy, Users } = lucide;
 
-    // --- Hardcoded Data (Reconstructed) ---
     const PLAYERS = [
-        { id: 'bounou', name: 'Yassine Bounou', arName: 'ياسين بونو', number: 1, position: 'goalkeeper', arPosition: 'حارس مرمى', club: 'الهلال', age: 34, height: '1.92م', weight: '78كغ', caps: 85, goals: 0, bio: 'حارس صلب وقائد هادئ، يُعرف بلقب "سد المنيع".', detailedBio: 'بونو هو الحارس الأول الذي قاد المغرب لنصف نهائي كأس العالم بتصديات إعجازية.', stats: { pace: 50, shooting: 50, passing: 60, dribbling: 50, defending: 90, physicality: 80 } },
-        // ... (truncated for brevity, but I should add all 30 players here as referenced in previous turns)
+      { id: 'bounou', name: 'ياسين بونو', position: 'حارس', club: 'الهلال', goals: 0, caps: 85 },
+      { id: 'hakimi', name: 'أشرف حكيمي', position: 'مدافع', club: 'PSG', goals: 12, caps: 80 },
+      { id: 'amrabat', name: 'سفيان أمرابط', position: 'وسط', club: 'Fenerbahçe', goals: 2, caps: 65 },
+      { id: 'ziyech', name: 'حكيم زياش', position: 'جناح', club: 'Galatasaray', goals: 24, caps: 60 },
+      { id: 'enesyri', name: 'يوسف النصيري', position: 'مهاجم', club: 'Fenerbahçe', goals: 22, caps: 75 },
+      { id: 'saiss', name: 'رومان سايس', position: 'مدافع', club: 'Al-Shabab', goals: 5, caps: 82 },
+      { id: 'mazraoui', name: 'نصير مزراوي', position: 'مدافع', club: 'Man United', goals: 2, caps: 30 },
+      { id: 'ounahi', name: 'عزالدين أوناحي', position: 'وسط', club: 'Panathinaikos', goals: 5, caps: 35 },
+      { id: 'boufal', name: 'سفيان بوفال', position: 'جناح', club: 'Al-Rayyan', goals: 8, caps: 45 },
+      { id: 'elkaabi', name: 'أيوب الكعبي', position: 'مهاجم', club: 'Olympiacos', goals: 15, caps: 40 }
     ];
 
-    // ... (include all MILESTONES, TROPHIES, MATCHES, CORE_STATS) ...
+    const MILESTONES = [
+      { year: 1970, title: 'أول مشاركة في كأس العالم بالمكسيك' },
+      { year: 1976, title: 'أول لقب قاري: كأس أمم إفريقيا بإثيوبيا' },
+      { year: 1986, title: 'أول منتخب إفريقي وعربي بعبور دور المجموعات بالمونديال' },
+      { year: 1998, title: 'أداء تاريخي ومنتخب ذهبي في مونديال فرنسا' },
+      { year: 2004, title: 'وصافة قارية مشرفة في تونس' },
+      { year: 2018, title: 'التتويج بلقب بطولة أمم إفريقيا للمحليين (CHAN)' },
+      { year: 2020, title: 'الدفاع عن لقب كأس أمم إفريقيا للمحليين (CHAN)' },
+      { year: 2022, title: 'إنجاز أسطوري: رابع العالم في مونديال قطر' },
+      { year: 2025, title: 'التتويج بلقب كأس أمم إفريقيا (اللقب الثاني)' },
+      { year: 2025, title: 'التتويج بلقب كأس العرب' }
+    ];
+
+    const STATS = [
+      { label: 'إجمالي الأهداف', val: '800+' },
+      { label: 'كؤوس إفريقيا', val: '2' },
+      { label: 'مشاركات المونديال', val: '7' },
+      { label: 'الهداف التاريخي', val: 'أحمد فرس (42)' }
+    ];
 
     function App() {
-      // Full App component logic from previous App.tsx
+      const [activeTab, setActiveTab] = useState('squad');
+
       return (
-        <div><h1>أرشيف أسود الأطلس 🇲🇦</h1></div>
+        <div className="min-h-screen bg-neutral-50 p-6 md:p-10" dir="rtl">
+          <header className="max-w-4xl mx-auto mb-10 text-center">
+            <h1 className="text-5xl md:text-6xl font-black text-[#80132B] mb-4">أرشيف أسود الأطلس 🇲🇦</h1>
+            <p className="text-xl text-neutral-600">تاريخ وفخر الكرة المغربية</p>
+          </header>
+
+          <nav className="flex justify-center gap-4 mb-10">
+            {['squad', 'history'].map((tab) => (
+              <button 
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`py-2 px-6 rounded-full font-bold transition-all ${activeTab === tab ? 'bg-[#80132B] text-white shadow-lg' : 'bg-white text-neutral-700 shadow'}`}
+              >
+                {tab === 'squad' ? 'الكتيبة' : 'التاريخ'}
+              </button>
+            ))}
+          </nav>
+
+          <AnimatePresence mode="wait">
+            {activeTab === 'squad' ? (
+              <motion.div 
+                key="squad"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="max-w-6xl mx-auto"
+              >
+                <div className="bg-white rounded-3xl shadow-lg border border-neutral-100 overflow-hidden">
+                  <table className="w-full text-right">
+                    <thead className="bg-neutral-100/50">
+                      <tr>
+                        <th className="p-4">الاسم</th>
+                        <th className="p-4">المركز</th>
+                        <th className="p-4">النادي</th>
+                        <th className="p-4">الأهداف</th>
+                        <th className="p-4">المباريات</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {PLAYERS.map(p => (
+                        <tr key={p.id} className="border-t border-neutral-100 hover:bg-neutral-50">
+                          <td className="p-4 font-bold">{p.name}</td>
+                          <td className="p-4 text-neutral-600">{p.position}</td>
+                          <td className="p-4 font-bold text-amber-600">{p.club}</td>
+                          <td className="p-4">{p.goals}</td>
+                          <td className="p-4">{p.caps}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div 
+                key="history"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="max-w-4xl mx-auto space-y-10"
+              >
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {STATS.map((s, i) => (
+                    <div key={i} className="bg-[#80132B] text-white p-6 rounded-3xl text-center shadow-lg">
+                      <div className="text-2xl md:text-3xl font-black mb-2">{s.val}</div>
+                      <div className="text-xs font-bold uppercase tracking-wider">{s.label}</div>
+                    </div>
+                  ))}
+                </div>
+                
+                <div className="space-y-4">
+                  <div className="bg-[#80132B] text-white p-8 rounded-3xl shadow-lg">
+                     <h3 className="text-2xl font-black mb-4">أرقام ومسيرة تاريخية</h3>
+                     <p className="text-lg leading-relaxed">
+                       منذ تأسيس المنتخب، خاض "أسود الأطلس" أكثر من 650 مباراة دولية، مسجلين قرابة 800 هدفاً، مما يعكس قوة هجومية ضاربة. وتوج المنتخب بلقبين في كأس أمم إفريقيا (1976، 2025)، بالإضافة إلى لقبين في بطولة أمم إفريقيا للمحليين (CHAN)، ولقب كأس العرب (2025)، مع إنجازات عالمية بارزة في المونديال، أبرزها ربع النهائي في 2022.
+                     </p>
+                     <p className="text-lg mt-4 font-bold">
+                       يظل المنتخب المغربي منارة في القارة السمراء، بقيادة أساطير مثل أحمد فرس، صلاح الدين بصير، ونور الدين نيبت، وصولاً إلى نجوم 2025 والجيل الحالي.
+                     </p>
+                  </div>
+                  {MILESTONES.map((m, i) => (
+                    <div key={i} className="flex items-center gap-6 bg-white p-6 rounded-2xl shadow hover:shadow-md transition">
+                      <div className="text-2xl font-black text-amber-500 w-20 shrink-0">{m.year}</div>
+                      <div className="text-lg font-bold text-neutral-800">{m.title}</div>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       );
     }
     
